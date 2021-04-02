@@ -14,7 +14,7 @@ body {
     background-size: cover;
 }
 
-h2  {
+h2 + p :hover {
     color: #AA4139;
     text-align: center;
     border: 5px dashed rgb(255,176,170, 0.5);
@@ -30,7 +30,7 @@ li {
     display: inline-block;
 }
 
-.webtext {
+.webtext :last-child {
     color: black;
     border: red;
 }
