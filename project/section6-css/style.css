@@ -11,7 +11,7 @@
 
 body {
     background-image: url(backgroundimage.jpg);
-    background-size: cover;
+    background-size: auto;
 }
 
 h2 + p :hover {
