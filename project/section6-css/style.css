@@ -31,3 +31,7 @@ li {
     border: red;
 }
 
+.active {
+    color: red;
+}
+
