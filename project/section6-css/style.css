@@ -26,5 +26,8 @@ li {
     display: inline-block;
 }
 
-
+.webtext {
+    color: black;
+    border: red;
+}
 
