@@ -5,6 +5,10 @@
 /*https://css-tricks.com*/
 /*https://paletton.com*/
 
+* {
+    text-align: right;
+}
+
 body {
     background-image: url(backgroundimage.jpg);
     background-size: cover;
@@ -37,4 +41,8 @@ li {
 
 #div1 {
     background: rgba(0,0,255,0.2);
+}
+
+#div2 {
+    background: rgba(255,0,0,0.2);
 }
