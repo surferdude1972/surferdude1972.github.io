@@ -12,7 +12,8 @@
     <header class="header">
       <h1 class="heading">
         Jeroen & Laura
-        <span class="heading-subtext"> Wij gaan trouwen!</span>
+        <span class="heading-subtext"> Wij gaan trouwen! </span>
+        <span class="heading-subtext" id="countdown"></span>
       </h1>
     </header>
     <a data-scroll class="fixed-button" href="#rsvp" id="rsvpButton">RSVP</a> 
@@ -41,14 +42,9 @@
           <div class="row">
               <div class="col-md-6">
                   <div class="the-content">
-                      <h2>Locatie</h2>
-                      <p><strong>Adres</strong><br />
-                      Buitenplaats Land van Es<br />
-                      Land van Esseweg 6 | 3291 LJ | Strijen</p>
-                      <p><strong>Parkeren</strong><br />
-                      Met uitleg</p>
-                      <p><strong>Route</strong><br />
-                      Met uitleg</p>
+                      <h2>Countdown</h2>
+                      <!-- Display the countdown timer in an element -->
+                        <h3><p id="countdown"></p></h3>
                   </div>
               </div>
               <div class="col-md-6">
@@ -76,7 +72,7 @@
               <h2>Dresscode</h2>
             </div>
           <div class="the-content">
-            <p><b>Onze bruiloft zal een bohemian chic thema hebben.</b></p>
+            <p><b>Onze bruiloft zal een summer chic thema hebben.</b></p>
             <p>Dus doe lekker zomerse kleding aan, met een bohemian touch.</p>
             <p>Maar wees vooral lekker jezelf!</p>
           </div>
@@ -91,12 +87,12 @@
               <div class="col-md-6">
                   <div class="the-content">
                       <h2>Cadeau wensen</h2>
-                      <p>De een heeft een hele huwelijkscadeaulijst en de ander wil graag een envelopje. Vul hier in wat jullie wens is. Bijvoorbeeld een mooi kunstwerk voor thuis, of een zakcentje voor een onvergetelijke honeymoon?</p>
+                      <p>We zijn superblij met ons nieuwe huis, en om het helemaal compleet te maken zijn we aan het sparen voor een hele mooie bbq.</p>
                   </div>
               </div>
               <div class="col-md-6">
                   <div class="the-image">
-                      <img alt="" data-lazy-src="./img/cadeautafel.jpg"><noscript><img src="./img/cadeautafel.jpg" alt=""></noscript>
+                      <img src="./img/cadeautafel.jpg" alt="">
                   </div>
               </div>
           </div>
@@ -120,11 +116,11 @@
         </div> -->
     <div class="container">
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-7">
           <div class="details">
             <!-- <i class="fas fa-reply"></i> -->
             <h3 class="details-heading" id="rsvp">RSVP</h3> 
-            <p>[Embed your RSVP form here]</p>
+            <!-- <p>[Embed your RSVP form here]</p> -->
             <!-- Include Embedded link of Google Form here in place of # -->
             <iframe title="RSVP" src="https://forms.gle/aQELJXGCxLfMiaya9" style="width:100%;" height="960" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>   
           </div>
@@ -266,6 +262,36 @@
               observer.observe(b, config);
           }
       }, false);</script>
+  <script>
+  // Set the date we're counting down to
+  var countDownDate = new Date("Juli 12, 2025 14:00:00").getTime();
+
+  // Update the count down every 1 second
+  var x = setInterval(function() {
+
+    // Get today's date and time
+    var now = new Date().getTime();
+
+    // Find the distance between now and the count down date
+    var distance = countDownDate - now;
+
+    // Time calculations for days, hours, minutes and seconds
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    // Display the result in the element with id="demo"
+    document.getElementById("countdown").innerHTML = days + "d " + hours + "h "
+    + minutes + "m " + seconds + "s ";
+
+    // If the count down is finished, write some text
+    if (distance < 0) {
+      clearInterval(x);
+      document.getElementById("countdown").innerHTML = "EXPIRED";
+    }
+  }, 1000);
+  </script>
       <!-- <script data-no-minify="1" async src="https://www.hetbruidsmeisje.nl/wp-content/plugins/rocket-lazy-load/assets/js/16.1/lazyload.min.js"></script> -->
     </body>
   </html>
