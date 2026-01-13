@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>076 Bal 2026 Blokkenschema</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f8f8f8;
+            text-align: center;
+			width: min(100%, 800px);
+			min-width: 800px;
+        }
+        .timetable .row {
+            border-bottom: 1px solid #ccc;
+            padding: 8px 0;
+        }
+        .schedule-row {
+            display: flex;
+            gap: 0;
+        }
+        .schedule-col {
+            flex: 1;
+            min-width: 0;
+			padding: 0;
+			border-right: 2px solid #ccc;
+        }
+        .schedule-col.time-col {
+            flex: 0 0 60px;
+            min-width: 60px;
+			border-right: 2px solid #ccc;
+        }
+        .schedule-col:last-child {
+            border-right: none;
+        }
+        .header {
+            font-weight: bold;
+            background-color: #EE0018;
+            color: white;
+            padding: 8px 0;
+			border-right: 2px solid #ccc;
+        }
+		.header:last-child {
+			border-right: none;
+		}
+        .act {
+            color: white;
+			font-weight: bold; 
+            padding: 1px 0;
+            border-radius: 0;
+            margin: 0;
+            background-color: #EE0018;
+			border-bottom: 2px solid #ccc;
+			place-items: center;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+        .act2 {
+            color: black;
+			font-weight: bold; 
+            padding: 8px 0;
+            border-radius: 0;
+            margin: 0;
+            background-color: #FEB101;
+			border-bottom: 2px solid #ccc;
+			place-items: center;
+		}
+        .dj { 
+            color: white;
+			font-style: italic; 
+            background-color: #EC6707;
+            border-radius: 0;
+			font-size: small;
+			display: grid; 
+			place-items: center;
+			border-bottom: 2px solid #ccc;
+		}
+		.bal076 {
+			font-weight: bold; 
+			font-size: medium;
+			text-align: center;
+		}
+		.blokkenschema {
+			font-weight: bold; 
+			font-size: xx-large;
+			text-align: center;
+		}
+		.presenters {
+			font-weight: bold; 
+			font-size: small;
+			text-align: center;
+		}
+		.time-cell {
+			border-bottom: 2px solid #ccc;
+			padding: 8px 0;
+			height: 57px;
+			box-sizing: border-box;
+		}
+		.time25min { height: 46px; }
+		.time5min { height: 9px; }
+		.time30min { height: 57px; box-sizing: border-box; }
+		.time55min { height: 106px; }
+		.time60min { height: 116px; }
+    </style>
+    <script>
+        // SCHEDULE DATA - Edit this to change the timetable
+        const schedule = {
+            "Grote Zaal": [
+                { time: "20:30", type: "act", name: "Bennie Solo" },
+                { time: "21:00", type: "act", name: "CV De Weggooiers" },
+                { time: "22:00", type: "act", name: "Peter Selie" },
+                { time: "22:30", type: "act", name: "Mosterd na de Maaltijd" }
+            ],
+            "Pop Cafe": [
+                { time: "20:30", type: "act", name: "Dubbel 2" },
+                { time: "22:00", type: "act", name: "CV De Badraove" },
+                { time: "22:30", type: "act", name: "Tommy Lips" }
+            ],
+            "Podium Buiten": [
+                { time: "20:30", type: "act", name: "Qwitnix" },
+                { time: "21:00", type: "act", name: "Prins Driekus" },
+                { time: "21:30", type: "act", name: "Masquenada" }
+            ],
+            "Kleine Zaal": [
+                { time: "20:55", type: "act", name: "Biermagneten" },
+                { time: "21:55", type: "act", name: "Aogse-Bluf" },
+                { time: "22:55", type: "act", name: "de Koele Band" },
+                { time: "23:55", type: "act", name: "Qwitnix" },
+                { time: "00:55", type: "act", name: "Loze Lavers" },
+                { time: "01:55", type: "act", name: "Bentzat" },
+                { time: "02:55", type: "act", name: "Toeternietoe" }
+            ]
+        };
+
+        const djLabels = {
+            "Grote Zaal": "DJ",
+            "Pop Cafe": "Geluid Grote zaal",
+            "Podium Buiten": "DJ",
+            "Kleine Zaal": "DJ"
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+			<div class="col-10">
+				<img src="076bal_banner600.jpg">
+			</div>
+		</div>
+        <div class="row">
+			<div class="col-5 bal076">
+				076 Bal 2026<br>
+				Nachtclub De Krolse Kater
+			</div>
+			<div class="col-5 blokkenschema">
+				Blokkenschema
+			</div>
+		</div>
+        <div class="row">
+			<div class="col-5 presenters">
+				*Presentatie: Pim van Ginneken<br>
+			</div>
+			<div class="col-5 presenters">
+				DJ's: DJ Matthijs & DJ Paul
+			</div>
+		</div>
+        <div class="row schedule-row">
+			<div class="schedule-col time-col header">Tijd</div>
+			<div class="schedule-col header">Grote Zaal*</div>
+			<div class="schedule-col header">Pop Cafe*</div>
+			<div class="schedule-col header">Podium Buiten</div>
+			<div class="schedule-col header">Kleine Zaal</div>
+		</div>
+		<div class="row schedule-row" id="schedule-content">
+			<!-- Schedule will be generated here by JavaScript -->
+        </div>
+    </div>
+    <script>
+        // Helper function to convert time string to minutes since 20:00
+        function timeToMinutes(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            let adjustedHours = hours;
+            if (hours < 20) adjustedHours += 24; // Handle past midnight
+            return (adjustedHours - 20) * 60 + minutes;
+        }
+
+        // Generate schedule for each location
+        function generateSchedule() {
+            const locations = ["Grote Zaal", "Pop Cafe", "Podium Buiten", "Kleine Zaal"];
+            const startTime = 0; // 20:00 = 0 minutes
+            const endTime = 420; // 03:00 = 7 hours * 60 = 420 minutes
+            const actDuration = 30;
+            const djDuration = 30;
+            
+            // End times for each location (in minutes since 20:00)
+            const endTimes = {
+                "Grote Zaal": endTime,
+                "Pop Cafe": endTime,
+                "Podium Buiten": 180, // 23:00 = 3 hours * 60 = 180 minutes
+                "Kleine Zaal": endTime
+            };
+            
+            // Build timeline for each location
+            const timelines = {};
+            locations.forEach(location => {
+                timelines[location] = [];
+                const acts = schedule[location] || [];
+                const djLabel = djLabels[location];
+                const locationEndTime = endTimes[location] || endTime;
+                
+                let currentTime = startTime;
+                let actIndex = 0;
+                
+                while (currentTime < locationEndTime) {
+                    // Check if there's an act scheduled at this time
+                    const nextAct = acts[actIndex];
+                    
+                    if (nextAct && timeToMinutes(nextAct.time) <= currentTime + 5) {
+                        // Act starts now (with 5-minute tolerance)
+                        timelines[location].push({
+                            type: 'act',
+                            name: nextAct.name,
+                            duration: actDuration
+                        });
+                        currentTime += actDuration;
+                        actIndex++;
+                    } else {
+                        // DJ time
+                        timelines[location].push({
+                            type: 'dj',
+                            name: djLabel,
+                            duration: djDuration
+                        });
+                        currentTime += djDuration;
+                    }
+                }
+            });
+            
+            // Render HTML
+            renderSchedule(timelines, locations);
+        }
+
+        function renderSchedule(timelines, locations) {
+            const container = document.getElementById('schedule-content');
+            
+            // Time column
+            let timeHTML = '<div class="schedule-col time-col">';
+            for (let hour = 20; hour <= 26; hour++) {
+                const displayHour = hour > 23 ? hour - 24 : hour;
+                // Add two 30-minute slots per hour
+                timeHTML += `<div class="time30min time-cell">${displayHour}:00</div>`;
+                timeHTML += `<div class="time30min time-cell">${displayHour}:30</div>`;
+            }
+            timeHTML += '</div>';
+            
+            // Location columns
+            let locationHTML = '';
+            locations.forEach((location, idx) => {
+                locationHTML += `<div class="schedule-col">`;
+                
+                timelines[location].forEach(slot => {
+                    if (slot.type === 'act') {
+                        locationHTML += `<div class="time30min act">${slot.name}</div>`;
+                    } else {
+                        locationHTML += `<div class="time30min dj">${slot.name}</div>`;
+                    }
+                });
+                
+                locationHTML += '</div>';
+            });
+            
+            container.innerHTML = timeHTML + locationHTML;
+        }
+
+        // Generate schedule on page load
+        document.addEventListener('DOMContentLoaded', generateSchedule);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
