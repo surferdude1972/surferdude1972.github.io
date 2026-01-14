@@ -25,12 +25,12 @@
             flex: 1;
             min-width: 0;
 			padding: 0;
-			border-right: 2px solid #ccc;
+			border-right: 4px solid #ccc;
         }
         .schedule-col.time-col {
             flex: 0 0 60px;
             min-width: 60px;
-			border-right: 2px solid #ccc;
+			border-right: 4px solid #ccc;
         }
         .schedule-col:last-child {
             border-right: none;
@@ -40,43 +40,47 @@
             background-color: #EE0018;
             color: white;
             padding: 8px 0;
-			border-right: 2px solid #ccc;
+			border-right: 4px solid #ccc;
+            border-bottom: 4px solid #ccc;
         }
 		.header:last-child {
 			border-right: none;
 		}
-        .act {
+        .act2 {
             color: white;
 			font-weight: bold; 
             padding: 1px 0;
             border-radius: 0;
             margin: 0;
             background-color: #EE0018;
-			border-bottom: 2px solid #ccc;
+			border-bottom: 4px solid #ccc;
+			display: grid;
 			place-items: center;
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
-        .act2 {
+        .act {
             color: black;
 			font-weight: bold; 
             padding: 8px 0;
             border-radius: 0;
             margin: 0;
             background-color: #FEB101;
-			border-bottom: 2px solid #ccc;
+			border-bottom: 4px solid #ccc;
+			display: grid;
 			place-items: center;
 		}
         .dj { 
-            color: white;
-			font-style: italic; 
+            color: black;
+			/* font-style: bold;  */
+            /* font-weight: bold; */
             background-color: #EC6707;
             border-radius: 0;
-			font-size: small;
+			/* font-size: small; */
 			display: grid; 
 			place-items: center;
-			border-bottom: 2px solid #ccc;
+			border-bottom: 4px solid #ccc;
 		}
 		.bal076 {
 			font-weight: bold; 
@@ -94,7 +98,7 @@
 			text-align: center;
 		}
 		.time-cell {
-			border-bottom: 2px solid #ccc;
+			border-bottom: 4px solid #ccc;
 			padding: 8px 0;
 			height: 57px;
 			box-sizing: border-box;
@@ -119,11 +123,6 @@
                 { time: "22:00", type: "act", name: "CV De Badraove" },
                 { time: "22:30", type: "act", name: "Tommy Lips" }
             ],
-            "Podium Buiten": [
-                { time: "20:30", type: "act", name: "Qwitnix" },
-                { time: "21:00", type: "act", name: "Prins Driekus" },
-                { time: "21:30", type: "act", name: "Masquenada" }
-            ],
             "Kleine Zaal": [
                 { time: "20:55", type: "act", name: "Biermagneten" },
                 { time: "21:55", type: "act", name: "Aogse-Bluf" },
@@ -132,7 +131,13 @@
                 { time: "00:55", type: "act", name: "Loze Lavers" },
                 { time: "01:55", type: "act", name: "Bentzat" },
                 { time: "02:55", type: "act", name: "Toeternietoe" }
-            ]
+            ],
+            "Podium Buiten": [
+                { time: "20:30", type: "act", name: "Qwitnix" },
+                { time: "21:00", type: "act", name: "Prins Driekus" },
+                { time: "21:30", type: "act", name: "Masquenada" },
+                { time: "22:00", type: "act", name: "Toeteleurs"}
+            ],
         };
 
         const djLabels = {
@@ -171,8 +176,8 @@
 			<div class="schedule-col time-col header">Tijd</div>
 			<div class="schedule-col header">Grote Zaal*</div>
 			<div class="schedule-col header">Pop Cafe*</div>
-			<div class="schedule-col header">Podium Buiten</div>
 			<div class="schedule-col header">Kleine Zaal</div>
+			<div class="schedule-col header">Podium Buiten</div>
 		</div>
 		<div class="row schedule-row" id="schedule-content">
 			<!-- Schedule will be generated here by JavaScript -->
@@ -189,7 +194,7 @@
 
         // Generate schedule for each location
         function generateSchedule() {
-            const locations = ["Grote Zaal", "Pop Cafe", "Podium Buiten", "Kleine Zaal"];
+            const locations = ["Grote Zaal", "Pop Cafe", "Kleine Zaal", "Podium Buiten"];
             const startTime = 0; // 20:00 = 0 minutes
             const endTime = 420; // 03:00 = 7 hours * 60 = 420 minutes
             const actDuration = 30;
@@ -199,8 +204,8 @@
             const endTimes = {
                 "Grote Zaal": endTime,
                 "Pop Cafe": endTime,
-                "Podium Buiten": 180, // 23:00 = 3 hours * 60 = 180 minutes
-                "Kleine Zaal": endTime
+                "Kleine Zaal": endTime,
+                "Podium Buiten": 180 // 23:00 = 3 hours * 60 = 180 minutes
             };
             
             // Build timeline for each location
