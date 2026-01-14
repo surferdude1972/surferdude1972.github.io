@@ -124,13 +124,13 @@
                 { time: "22:30", type: "act", name: "Tommy Lips" }
             ],
             "Kleine Zaal": [
-                { time: "20:55", type: "act", name: "Biermagneten" },
-                { time: "21:55", type: "act", name: "Aogse-Bluf" },
-                { time: "22:55", type: "act", name: "de Koele Band" },
-                { time: "23:55", type: "act", name: "Qwitnix" },
-                { time: "00:55", type: "act", name: "Loze Lavers" },
-                { time: "01:55", type: "act", name: "Bentzat" },
-                { time: "02:55", type: "act", name: "Toeternietoe" }
+                { time: "20:15", type: "act", name: "Biermagneten", duration: 25 },
+                { time: "21:00", type: "act", name: "Aogse-Bluf", duration: 25 },
+                { time: "21:45", type: "act", name: "de Koele Band", duration: 25 },
+                { time: "22:30", type: "act", name: "Qwitnix", duration: 25 },
+                { time: "23:15", type: "act", name: "Loze Lavers", duration: 25 },
+                { time: "00:00", type: "act", name: "Bentzat", duration: 25 },
+                { time: "00:45", type: "act", name: "Toeternietoe", duration: 25 }
             ],
             "Podium Buiten": [
                 { time: "20:30", type: "act", name: "Qwitnix" },
@@ -142,7 +142,7 @@
 
         const djLabels = {
             "Grote Zaal": "DJ",
-            "Pop Cafe": "DJ",
+            "Pop Cafe": "Geluid Grote zaal",
             "Podium Buiten": "DJ",
             "Kleine Zaal": "DJ"
         };
@@ -174,9 +174,9 @@
 		</div>
         <div class="row schedule-row">
 			<div class="schedule-col time-col header">Tijd</div>
-			<div class="schedule-col header">Grote Zaal</div>
-			<div class="schedule-col header">Pop Cafe</div>
-			<div class="schedule-col header">Kleine Zaal*</div>
+			<div class="schedule-col header">Grote Zaal*</div>
+			<div class="schedule-col header">Pop Cafe*</div>
+			<div class="schedule-col header">Kleine Zaal</div>
 			<div class="schedule-col header">Podium Buiten</div>
 		</div>
 		<div class="row schedule-row" id="schedule-content">
@@ -216,30 +216,74 @@
                 const djLabel = djLabels[location];
                 const locationEndTime = endTimes[location] || endTime;
                 
-                let currentTime = startTime;
-                let actIndex = 0;
-                
-                while (currentTime < locationEndTime) {
-                    // Check if there's an act scheduled at this time
-                    const nextAct = acts[actIndex];
+                // Special handling for Kleine Zaal with irregular times
+                if (location === "Kleine Zaal") {
+                    let currentTime = startTime;
+                    let actIndex = 0;
                     
-                    if (nextAct && timeToMinutes(nextAct.time) <= currentTime + 5) {
-                        // Act starts now (with 5-minute tolerance)
-                        timelines[location].push({
-                            type: 'act',
-                            name: nextAct.name,
-                            duration: actDuration
-                        });
-                        currentTime += actDuration;
-                        actIndex++;
-                    } else {
-                        // DJ time
-                        timelines[location].push({
-                            type: 'dj',
-                            name: djLabel,
-                            duration: djDuration
-                        });
-                        currentTime += djDuration;
+                    while (currentTime < locationEndTime) {
+                        const nextAct = acts[actIndex];
+                        
+                        if (nextAct) {
+                            const actStartTime = timeToMinutes(nextAct.time);
+                            
+                            // Fill DJ time before the act
+                            if (currentTime < actStartTime) {
+                                const djTime = actStartTime - currentTime;
+                                timelines[location].push({
+                                    type: 'dj',
+                                    name: djLabel,
+                                    duration: djTime
+                                });
+                                currentTime = actStartTime;
+                            }
+                            
+                            // Add the act
+                            const actLength = nextAct.duration || actDuration;
+                            timelines[location].push({
+                                type: 'act',
+                                name: nextAct.name,
+                                duration: actLength
+                            });
+                            currentTime += actLength;
+                            actIndex++;
+                        } else {
+                            // No more acts, fill with DJ time
+                            timelines[location].push({
+                                type: 'dj',
+                                name: djLabel,
+                                duration: locationEndTime - currentTime
+                            });
+                            currentTime = locationEndTime;
+                        }
+                    }
+                } else {
+                    // Standard handling for other locations
+                    let currentTime = startTime;
+                    let actIndex = 0;
+                    
+                    while (currentTime < locationEndTime) {
+                        // Check if there's an act scheduled at this time
+                        const nextAct = acts[actIndex];
+                        
+                        if (nextAct && timeToMinutes(nextAct.time) <= currentTime + 5) {
+                            // Act starts now (with 5-minute tolerance)
+                            timelines[location].push({
+                                type: 'act',
+                                name: nextAct.name,
+                                duration: actDuration
+                            });
+                            currentTime += actDuration;
+                            actIndex++;
+                        } else {
+                            // DJ time
+                            timelines[location].push({
+                                type: 'dj',
+                                name: djLabel,
+                                duration: djDuration
+                            });
+                            currentTime += djDuration;
+                        }
                     }
                 }
             });
@@ -267,10 +311,13 @@
                 locationHTML += `<div class="schedule-col">`;
                 
                 timelines[location].forEach(slot => {
+                    // Calculate height dynamically based on duration (57px per 30min)
+                    const heightPx = Math.round(slot.duration * 57 / 30);
+                    
                     if (slot.type === 'act') {
-                        locationHTML += `<div class="time30min act">${slot.name}</div>`;
+                        locationHTML += `<div class="act" style="height: ${heightPx}px">${slot.name}</div>`;
                     } else {
-                        locationHTML += `<div class="time30min dj">${slot.name}</div>`;
+                        locationHTML += `<div class="dj" style="height: ${heightPx}px">${slot.name}</div>`;
                     }
                 });
                 
