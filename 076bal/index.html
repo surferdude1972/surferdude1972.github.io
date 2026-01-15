@@ -26,6 +26,7 @@
             min-width: 0;
 			padding: 0;
 			border-right: 4px solid #ccc;
+            border-bottom: 4px solid #ccc;
         }
         .schedule-col.time-col {
             flex: 0 0 60px;
@@ -33,7 +34,8 @@
 			border-right: 4px solid #ccc;
         }
         .schedule-col:last-child {
-            border-right: none;
+            border-right: 4px solid #ccc;
+            /* border-right: none; */
         }
         .header {
             font-weight: bold;
@@ -98,7 +100,7 @@
 			text-align: center;
 		}
 		.time-cell {
-			border-bottom: 4px solid #ccc;
+			border-bottom: 1px solid #ccc;
 			padding: 8px 0;
 			height: 57px;
 			box-sizing: border-box;
@@ -111,40 +113,93 @@
     </style>
     <script>
         // SCHEDULE DATA - Edit this to change the timetable
+        // Each location has:
+        //   - startTime: when the location opens (HH:MM format)
+        //   - endTime: when the location closes (HH:MM format, can be after midnight)
+        //   - items: array of acts/DJs with {time, type, name, duration}
+        //     - time: start time (HH:MM)
+        //     - type: "act" or "dj"
+        //     - name: display name
+        //     - duration: duration in minutes (optional, defaults: act=30, dj=30)
+        
         const schedule = {
-            "Grote Zaal": [
-                { time: "20:30", type: "act", name: "Bennie Solo" },
-                { time: "21:00", type: "act", name: "CV De Weggooiers" },
-                { time: "22:00", type: "act", name: "Peter Selie" },
-                { time: "22:30", type: "act", name: "Mosterd na de Maaltijd" }
-            ],
-            "Pop Cafe": [
-                { time: "20:30", type: "act", name: "Dubbel 2" },
-                { time: "22:00", type: "act", name: "CV De Badraove" },
-                { time: "22:30", type: "act", name: "Tommy Lips" }
-            ],
-            "Kleine Zaal": [
-                { time: "20:15", type: "act", name: "Biermagneten", duration: 25 },
-                { time: "21:00", type: "act", name: "Aogse-Bluf", duration: 25 },
-                { time: "21:45", type: "act", name: "de Koele Band", duration: 25 },
-                { time: "22:30", type: "act", name: "Qwitnix", duration: 25 },
-                { time: "23:15", type: "act", name: "Loze Lavers", duration: 25 },
-                { time: "00:00", type: "act", name: "Bentzat", duration: 25 },
-                { time: "00:45", type: "act", name: "Toeternietoe", duration: 25 }
-            ],
-            "Podium Buiten": [
-                { time: "20:30", type: "act", name: "Qwitnix" },
-                { time: "21:00", type: "act", name: "Prins Driekus" },
-                { time: "21:30", type: "act", name: "Masquenada" },
-                { time: "22:00", type: "act", name: "Toeteleurs"}
-            ],
-        };
-
-        const djLabels = {
-            "Grote Zaal": "DJ",
-            "Pop Cafe": "Geluid Grote zaal",
-            "Podium Buiten": "DJ",
-            "Kleine Zaal": "DJ"
+            "Grote Zaal": {
+                startTime: "20:00",
+                endTime: "03:00",
+                items: [
+                    { time: "20:00", type: "dj", name: "DJ", duration: 30 },
+                    { time: "20:30", type: "dj", name: "DJ", duration: 30 },
+                    { time: "21:00", type: "act", name: "Bennie Solo", duration: 30 },
+                    { time: "21:30", type: "act", name: "CV De Weggooiers", duration: 60 },
+                    { time: "22:00", type: "dj", name: "DJ", duration: 30 },
+                    { time: "22:30", type: "dj", name: "DJ", duration: 30 },
+                    { time: "23:00", type: "act", name: "Peter Selie", duration: 30 },
+                    { time: "23:30", type: "act", name: "Mosterd na de Maaltijd", duration: 30 },
+                    { time: "00:00", type: "dj", name: "DJ", duration: 30 },
+                    { time: "00:30", type: "dj", name: "DJ", duration: 30 },
+                    { time: "01:00", type: "dj", name: "DJ", duration: 30 },
+                    { time: "01:30", type: "dj", name: "DJ", duration: 30 },
+                    { time: "02:00", type: "dj", name: "DJ", duration: 30 },
+                ]
+            },
+            "Pop Cafe": {
+                startTime: "20:00",
+                endTime: "03:00",
+                items: [
+                    { time: "20:00", type: "dj", name: "DJ", duration: 30 },
+                    { time: "20:30", type: "dj", name: "DJ", duration: 30 },
+                    { time: "21:00", type: "act", name: "Dubbel 2", duration: 30 },
+                    { time: "21:30", type: "dj", name: "DJ", duration: 30 },
+                    { time: "22:15", type: "dj", name: "DJ", duration: 30 },
+                    { time: "23:00", type: "act", name: "CV De Badraove", duration: 30 },
+                    { time: "23:30", type: "act", name: "Tommy Lips", duration: 30 },
+                    { time: "00:00", type: "dj", name: "DJ", duration: 30 },
+                    { time: "00:30", type: "dj", name: "DJ", duration: 30 },
+                    { time: "01:00", type: "dj", name: "DJ", duration: 30 },
+                    { time: "01:30", type: "dj", name: "DJ", duration: 30 },
+                    { time: "02:00", type: "dj", name: "DJ", duration: 30 },
+                    { time: "02:30", type: "dj", name: "DJ", duration: 30 }
+                ]
+            },
+            "Kleine Zaal": {
+                startTime: "20:00",
+                endTime: "03:00",
+                items: [
+                    { time: "20:00", type: "dj", name: "DJ", duration: 15 },
+                    { time: "20:15", type: "act", name: "Biermagneten", duration: 25 },
+                    { time: "20:40", type: "dj", name: "DJ", duration: 20 },
+                    { time: "21:00", type: "act", name: "Aogse-Bluf", duration: 25 },
+                    { time: "21:25", type: "dj", name: "DJ", duration: 20 },
+                    { time: "21:45", type: "act", name: "de Koele Band", duration: 25 },
+                    { time: "22:10", type: "dj", name: "DJ", duration: 20 },
+                    { time: "22:30", type: "act", name: "Qwitnix", duration: 25 },
+                    { time: "22:55", type: "dj", name: "DJ", duration: 20 },
+                    { time: "23:15", type: "act", name: "Loze Lavers", duration: 25 },
+                    { time: "23:40", type: "dj", name: "DJ", duration: 20 },
+                    { time: "00:00", type: "act", name: "Bentzat", duration: 25 },
+                    { time: "00:25", type: "dj", name: "DJ", duration: 20 },
+                    { time: "00:45", type: "act", name: "Toeternietoe", duration: 25 },
+                    { time: "01:10", type: "dj", name: "DJ", duration: 20 }
+                ]
+            },
+            "Podium Buiten": {
+                startTime: "20:00",
+                endTime: "23:00",
+                items: [
+                    { time: "20:00", type: "dj", name: "DJ", duration: 30 },
+                    { time: "20:30", type: "act", name: "Qwitnix", duration: 25 },
+                    { time: "20:55", type: "dj", name: "", duration: 5 },
+                    { time: "21:00", type: "act", name: "Prins Driekus", duration: 25 },
+                    { time: "21:25", type: "dj", name: "", duration: 5 },
+                    { time: "21:30", type: "act", name: "Masquenada", duration: 25 },
+                    { time: "21:55", type: "dj", name: "", duration: 5 },
+                    { time: "22:00", type: "act", name: "Toeteleurs", duration: 25 },
+                    { time: "22:25", type: "dj", name: "", duration: 5 },
+                    { time: "22:30", type: "dj", name: "DJ", duration: 30 },
+                    { time: "23:00", type: "dj", name: "DJ", duration: 30 },
+                    { time: "23:30", type: "dj", name: "DJ", duration: 30 }
+                ]
+            }
         };
     </script>
 </head>
@@ -174,9 +229,9 @@
 		</div>
         <div class="row schedule-row">
 			<div class="schedule-col time-col header">Tijd</div>
-			<div class="schedule-col header">Grote Zaal*</div>
-			<div class="schedule-col header">Pop Cafe*</div>
-			<div class="schedule-col header">Kleine Zaal</div>
+			<div class="schedule-col header">Grote Zaal</div>
+			<div class="schedule-col header">Pop Cafe</div>
+			<div class="schedule-col header">Kleine Zaal*</div>
 			<div class="schedule-col header">Podium Buiten</div>
 		</div>
 		<div class="row schedule-row" id="schedule-content">
@@ -195,113 +250,51 @@
         // Generate schedule for each location
         function generateSchedule() {
             const locations = ["Grote Zaal", "Pop Cafe", "Kleine Zaal", "Podium Buiten"];
-            const startTime = 0; // 20:00 = 0 minutes
-            const endTime = 420; // 03:00 = 7 hours * 60 = 420 minutes
-            const actDuration = 30;
-            const djDuration = 30;
-            
-            // End times for each location (in minutes since 20:00)
-            const endTimes = {
-                "Grote Zaal": endTime,
-                "Pop Cafe": endTime,
-                "Kleine Zaal": endTime,
-                "Podium Buiten": 180 // 23:00 = 3 hours * 60 = 180 minutes
-            };
+            const globalStartTime = 0; // 20:00 = 0 minutes
+            const globalEndTime = 420; // 03:00 = 7 hours * 60 = 420 minutes
             
             // Build timeline for each location
             const timelines = {};
             locations.forEach(location => {
-                timelines[location] = [];
-                const acts = schedule[location] || [];
-                const djLabel = djLabels[location];
-                const locationEndTime = endTimes[location] || endTime;
-                
-                // Special handling for Kleine Zaal with irregular times
-                if (location === "Kleine Zaal") {
-                    let currentTime = startTime;
-                    let actIndex = 0;
-                    
-                    while (currentTime < locationEndTime) {
-                        const nextAct = acts[actIndex];
-                        
-                        if (nextAct) {
-                            const actStartTime = timeToMinutes(nextAct.time);
-                            
-                            // Fill DJ time before the act
-                            if (currentTime < actStartTime) {
-                                const djTime = actStartTime - currentTime;
-                                timelines[location].push({
-                                    type: 'dj',
-                                    name: djLabel,
-                                    duration: djTime
-                                });
-                                currentTime = actStartTime;
-                            }
-                            
-                            // Add the act
-                            const actLength = nextAct.duration || actDuration;
-                            timelines[location].push({
-                                type: 'act',
-                                name: nextAct.name,
-                                duration: actLength
-                            });
-                            currentTime += actLength;
-                            actIndex++;
-                        } else {
-                            // No more acts, fill with DJ time
-                            timelines[location].push({
-                                type: 'dj',
-                                name: djLabel,
-                                duration: locationEndTime - currentTime
-                            });
-                            currentTime = locationEndTime;
-                        }
-                    }
-                } else {
-                    // Standard handling for other locations
-                    let currentTime = startTime;
-                    let actIndex = 0;
-                    
-                    while (currentTime < locationEndTime) {
-                        // Check if there's an act scheduled at this time
-                        const nextAct = acts[actIndex];
-                        
-                        if (nextAct && timeToMinutes(nextAct.time) <= currentTime + 5) {
-                            // Act starts now (with 5-minute tolerance)
-                            timelines[location].push({
-                                type: 'act',
-                                name: nextAct.name,
-                                duration: actDuration
-                            });
-                            currentTime += actDuration;
-                            actIndex++;
-                        } else {
-                            // DJ time
-                            timelines[location].push({
-                                type: 'dj',
-                                name: djLabel,
-                                duration: djDuration
-                            });
-                            currentTime += djDuration;
-                        }
-                    }
+                const locationData = schedule[location];
+                if (!locationData) {
+                    timelines[location] = [];
+                    return;
                 }
+                
+                const items = locationData.items || [];
+                timelines[location] = [];
+                
+                // Convert each item to timeline format with calculated heights
+                items.forEach(item => {
+                    timelines[location].push({
+                        type: item.type,
+                        name: item.name,
+                        duration: item.duration || 30,
+                        startTime: timeToMinutes(item.time)
+                    });
+                });
             });
             
             // Render HTML
-            renderSchedule(timelines, locations);
+            renderSchedule(timelines, locations, globalEndTime);
         }
 
-        function renderSchedule(timelines, locations) {
+        function renderSchedule(timelines, locations, globalEndTime) {
             const container = document.getElementById('schedule-content');
             
-            // Time column
+            // Time column - extends to 03:00 (27:00 in 24h+ format)
             let timeHTML = '<div class="schedule-col time-col">';
-            for (let hour = 20; hour <= 26; hour++) {
+            for (let hour = 20; hour <= 27; hour++) {
                 const displayHour = hour > 23 ? hour - 24 : hour;
-                // Add two 30-minute slots per hour
-                timeHTML += `<div class="time30min time-cell">${displayHour}:00</div>`;
-                timeHTML += `<div class="time30min time-cell">${displayHour}:30</div>`;
+                if (hour < 27) {
+                    // Add two 30-minute slots per hour
+                    timeHTML += `<div class="time30min time-cell">${displayHour}:00</div>`;
+                    timeHTML += `<div class="time30min time-cell">${displayHour}:30</div>`;
+                } else {
+                    // Add only the :00 slot for 03:00
+                    timeHTML += `<div class="time30min time-cell">03:00</div>`;
+                }
             }
             timeHTML += '</div>';
             
