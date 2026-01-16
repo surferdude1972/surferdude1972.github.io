@@ -10,8 +10,8 @@
             font-family: 'Roboto', Arial, sans-serif;
             background-color: #f8f8f8;
             text-align: center;
-			width: min(100%, 800px);
-			min-width: 800px;
+            padding: 0;
+            margin: 0;
         }
         .timetable .row {
             border-bottom: 1px solid #ccc;
@@ -110,6 +110,79 @@
 		.time30min { height: 57px; box-sizing: border-box; }
 		.time55min { height: 106px; }
 		.time60min { height: 116px; }
+		
+		img {
+			max-width: 100%;
+			height: auto;
+		}
+		
+		.location-section {
+			margin-bottom: 30px;
+		}
+		
+		.location-section .schedule-col {
+			width: 100%;
+		}
+		
+		.location-title {
+			font-weight: bold;
+			background-color: #EE0018;
+			color: white;
+			padding: 12px;
+			margin-bottom: 0;
+			font-size: 1.2em;
+		}
+		
+		/* Mobile responsive styles */
+		@media (max-width: 768px) {
+			.bal076 {
+				font-size: small;
+			}
+			
+			.blokkenschema {
+				font-size: x-large;
+			}
+			
+			.presenters {
+				font-size: x-small;
+			}
+			
+			.container {
+				padding: 0 10px;
+			}
+			
+			.schedule-row {
+				display: none;
+			}
+			
+			#schedule-content-mobile {
+				display: block;
+			}
+			
+			#schedule-content {
+				display: none;
+			}
+		}
+		
+		@media (min-width: 769px) {
+			#schedule-content-mobile {
+				display: none;
+			}
+		}
+		
+		@media (max-width: 480px) {
+			.bal076 {
+				font-size: x-small;
+			}
+			
+			.blokkenschema {
+				font-size: large;
+			}
+			
+			.presenters {
+				font-size: xx-small;
+			}
+		}
     </style>
     <script>
         // SCHEDULE DATA - Edit this to change the timetable
@@ -207,8 +280,8 @@
 <body>
     <div class="container">
         <div class="row">
-			<div class="col-10">
-				<img src="076bal_banner800.jpg">
+			<div class="col-12">
+				<img src="2026_banner.jpg">
 			</div>
 		</div>
         <div class="row">
@@ -228,7 +301,8 @@
 				DJ's: DJ Matthijs & DJ Paul & DJ William
 			</div>
 		</div>
-        <div class="row schedule-row">
+        <!-- Desktop schedule -->
+		<div class="row schedule-row">
 			<div class="schedule-col time-col header">Tijd</div>
 			<div class="schedule-col header">Grote Zaal</div>
 			<div class="schedule-col header">Pop Cafe</div>
@@ -237,7 +311,12 @@
 		</div>
 		<div class="row schedule-row" id="schedule-content">
 			<!-- Schedule will be generated here by JavaScript -->
-        </div>
+		</div>
+		
+		<!-- Mobile schedule -->
+		<div id="schedule-content-mobile">
+			<!-- Mobile schedule will be generated here by JavaScript -->
+		</div>
     </div>
     <script>
         // Helper function to convert time string to minutes since 20:00
@@ -272,16 +351,18 @@
                         type: item.type,
                         name: item.name,
                         duration: item.duration || 30,
-                        startTime: timeToMinutes(item.time)
+                        startTime: timeToMinutes(item.time),
+                        time: item.time
                     });
                 });
             });
             
-            // Render HTML
-            renderSchedule(timelines, locations, globalEndTime);
+            // Render HTML for desktop and mobile
+            renderDesktopSchedule(timelines, locations, globalEndTime);
+            renderMobileSchedule(timelines, locations);
         }
 
-        function renderSchedule(timelines, locations, globalEndTime) {
+        function renderDesktopSchedule(timelines, locations, globalEndTime) {
             const container = document.getElementById('schedule-content');
             
             // Time column - extends to 03:00 (27:00 in 24h+ format)
@@ -319,6 +400,32 @@
             });
             
             container.innerHTML = timeHTML + locationHTML;
+        }
+
+        function renderMobileSchedule(timelines, locations) {
+            const container = document.getElementById('schedule-content-mobile');
+            let mobileHTML = '';
+            
+            locations.forEach(location => {
+                mobileHTML += `<div class="location-section">`;
+                mobileHTML += `<div class="location-title">${location}${location === 'Kleine Zaal' ? '*' : ''}</div>`;
+                mobileHTML += `<div class="schedule-col">`;
+                
+                timelines[location].forEach(slot => {
+                    const timeLabel = slot.time || '';
+                    const className = slot.type === 'act' ? 'act' : 'dj';
+                    const heightPx = Math.round(slot.duration * 57 / 30);
+                    
+                    mobileHTML += `<div class="${className}" style="height: ${heightPx}px; display: flex; justify-content: space-between; align-items: center; padding: 8px;">`;
+                    mobileHTML += `<span>${timeLabel}</span>`;
+                    mobileHTML += `<span>${slot.name}</span>`;
+                    mobileHTML += `</div>`;
+                });
+                
+                mobileHTML += `</div></div>`;
+            });
+            
+            container.innerHTML = mobileHTML;
         }
 
         // Generate schedule on page load
