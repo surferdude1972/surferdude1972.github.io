@@ -223,8 +223,8 @@
                     { time: "20:00", type: "dj", name: "DJ", duration: 30 },
                     { time: "20:30", type: "act", name: "CV Goet Foud & Vincent Braat", duration: 30 },
                     { time: "21:00", type: "act", name: "Dubbel 2", duration: 30 },
-                    { time: "21:30", type: "dj", name: "DJ Paul", duration: 30 },
-                    { time: "22:15", type: "dj", name: "DJ Paul", duration: 30 },
+                    { time: "21:30", type: "dj", name: "DJ Paul", duration: 45 },
+                    { time: "22:15", type: "dj", name: "DJ Paul", duration: 45 },
                     { time: "23:00", type: "dj", name: "DJ Paul ", duration: 30 },
                     { time: "23:30", type: "act", name: "Tommy Lips", duration: 30 },
                     { time: "00:00", type: "act", name: "CV de Badraove", duration: 30 },
@@ -356,6 +356,9 @@
                         time: item.time
                     });
                 });
+                
+                // Sort by start time to ensure correct rendering
+                timelines[location].sort((a, b) => a.startTime - b.startTime);
             });
             
             // Render HTML for desktop and mobile
@@ -386,7 +389,16 @@
             locations.forEach((location, idx) => {
                 locationHTML += `<div class="schedule-col">`;
                 
+                let currentTime = 0; // Start at 20:00 (0 minutes)
+                
                 timelines[location].forEach(slot => {
+                    // Calculate gap before this event
+                    const gapMinutes = slot.startTime - currentTime;
+                    if (gapMinutes > 0) {
+                        const gapHeightPx = Math.round(gapMinutes * 57 / 30);
+                        locationHTML += `<div style="height: ${gapHeightPx}px; border-bottom: 4px solid #ccc;"></div>`;
+                    }
+                    
                     // Calculate height dynamically based on duration (57px per 30min)
                     const heightPx = Math.round(slot.duration * 57 / 30);
                     
@@ -395,6 +407,9 @@
                     } else {
                         locationHTML += `<div class="dj" style="height: ${heightPx}px">${slot.name}</div>`;
                     }
+                    
+                    // Update current time to the end of this event
+                    currentTime = slot.startTime + slot.duration;
                 });
                 
                 locationHTML += '</div>';
@@ -415,10 +430,9 @@
                 timelines[location].forEach(slot => {
                     const timeLabel = slot.time || '';
                     const className = slot.type === 'act' ? 'act' : 'dj';
-                    const heightPx = Math.round(slot.duration * 57 / 30);
                     
-                    mobileHTML += `<div class="${className}" style="height: ${heightPx}px; display: flex; justify-content: space-between; align-items: center; padding: 8px;">`;
-                    mobileHTML += `<span>${timeLabel}</span>`;
+                    mobileHTML += `<div class="${className}" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 8px; min-height: 40px;">`;
+                    mobileHTML += `<span style="font-weight: bold;">${timeLabel}</span>`;
                     mobileHTML += `<span>${slot.name}</span>`;
                     mobileHTML += `</div>`;
                 });
